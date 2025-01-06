@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فهرس المجلد</title>
+    <title>محتويات المجلد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,12 +23,26 @@
     </style>
 </head>
 <body>
-    <h1>فهرس المجلد</h1>
-    <ul>
-        <li><a href="file1.html">ملف 1</a></li>
-        <li><a href="file2.html">ملف 2</a></li>
-        <li><a href="folder1/">مجلد 1</a></li>
-        <li><a href="file3.html">ملف 3</a></li>
-    </ul>
+    <h1>محتويات المجلد</h1>
+    <ul id="folder-contents"></ul>
+
+    <script>
+        // جلب قائمة الملفات والمجلدات من الخادم
+        fetch('/list')
+            .then(response => response.json())
+            .then(data => {
+                const folderContents = document.getElementById('folder-contents');
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = item.isDirectory
+                        ? `<strong>[مجلد]</strong> <a href="${item.name}/">${item.name}</a>`
+                        : `<strong>[ملف]</strong> <a href="${item.name}" target="_blank">${item.name}</a>`;
+                    folderContents.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('حدث خطأ أثناء جلب البيانات:', error);
+            });
+    </script>
 </body>
 </html>
